@@ -2,7 +2,7 @@
 // SPICE GARDEN - ADMIN DASHBOARD
 // ==========================================
 
-const API_URL = "http://localhost:8080/api/reservations";
+const API_URL = "https://spice-garden-production-57b1.up.railway.app/api/reservations";
 
 let currentReservationId = null;
 
@@ -328,13 +328,12 @@ async function viewReservation(id) {
     try {
 
         const response =
-            await fetch(`${API_URL}/${id}`);
+    await fetch(`https://spice-garden-production-57b1.up.railway.app/api/reservations/${id}`);
 
-
-        console.log(
-            "Response status =",
-            response.status
-        );
+console.log(
+    "Response status =",
+    response.status
+);
 
 
         if (!response.ok) {
