@@ -1,0 +1,526 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - Spice Garden</title>
+
+    <link rel="stylesheet" href="admin.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         SIDEBAR
+         ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>Spice Garden</h2>
+
+            <p>Admin Panel</p>
+
+        </div>
+
+
+        <nav>
+
+            <button class="nav-item active">
+                Dashboard
+            </button>
+
+            <button class="nav-item">
+                Reservations
+            </button>
+
+            <button class="nav-item">
+                Pending
+            </button>
+
+            <button class="nav-item">
+                Confirmed
+            </button>
+
+            <button class="nav-item">
+                Completed
+            </button>
+
+            <button class="nav-item">
+                Cancelled
+            </button>
+
+        </nav>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            Logout
+
+        </button>
+
+    </aside>
+
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+         ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    Manage restaurant reservations
+                </p>
+
+            </div>
+
+
+            <div class="admin-info">
+
+                <span>Admin</span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ==========================================
+             STATISTICS
+             ========================================== -->
+
+        <section class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>Total Reservations</h3>
+
+                <p id="totalReservations">0</p>
+
+            </div>
+
+
+            <div class="stat-card pending">
+
+                <h3>Pending</h3>
+
+                <p id="pendingReservations">0</p>
+
+            </div>
+
+
+            <div class="stat-card confirmed">
+
+                <h3>Confirmed</h3>
+
+                <p id="confirmedReservations">0</p>
+
+            </div>
+
+
+            <div class="stat-card completed">
+
+                <h3>Completed</h3>
+
+                <p id="completedReservations">0</p>
+
+            </div>
+
+
+            <div class="stat-card cancelled">
+
+                <h3>Cancelled</h3>
+
+                <p id="cancelledReservations">0</p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             RESERVATIONS
+             ========================================== -->
+
+        <section class="reservation-section">
+
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>Reservations</h2>
+
+                    <p>
+                        Recent restaurant reservations
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="refresh-btn"
+                    onclick="refreshDashboard()">
+
+                    Refresh
+
+                </button>
+
+            </div>
+
+
+
+            <!-- RESERVATION TABLE -->
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Email</th>
+
+                            <th>Phone</th>
+
+                            <th>Guests</th>
+
+                            <th>Date</th>
+
+                            <th>Time</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="reservationTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- ==========================================
+         RESERVATION DETAILS MODAL
+         ========================================== -->
+
+    <div
+        id="reservationModal"
+        class="modal">
+
+
+        <div class="modal-content">
+
+
+            <!-- MODAL HEADER -->
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2>
+                        Reservation Details
+                    </h2>
+
+                    <p>
+                        Complete reservation information
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="close-modal"
+                    onclick="closeReservationModal()">
+
+                    &times;
+
+                </button>
+
+            </div>
+
+
+
+            <!-- MODAL DETAILS -->
+
+            <div class="reservation-details">
+
+
+                <!-- CUSTOMER INFORMATION -->
+
+                <div class="detail-section">
+
+                    <h3>
+                        Customer Information
+                    </h3>
+
+
+                    <div class="detail-grid">
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Name
+                            </span>
+
+                            <strong id="modalName">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong id="modalEmail">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Phone
+                            </span>
+
+                            <strong id="modalPhone">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Guests
+                            </span>
+
+                            <strong id="modalGuests">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- RESERVATION INFORMATION -->
+
+                <div class="detail-section">
+
+                    <h3>
+                        Reservation Information
+                    </h3>
+
+
+                    <div class="detail-grid">
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Reservation ID
+                            </span>
+
+                            <strong id="modalId">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Date
+                            </span>
+
+                            <strong id="modalDate">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Time
+                            </span>
+
+                            <strong id="modalTime">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong id="modalStatus">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SPECIAL REQUEST -->
+
+                <div class="detail-section">
+
+                    <h3>
+                        Special Request
+                    </h3>
+
+
+                    <div
+                        class="special-request"
+                        id="modalSpecialRequest">
+
+                        None
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ==========================================
+                 MODAL FOOTER
+                 ========================================== -->
+
+            <div class="modal-footer">
+
+
+                <div class="modal-actions">
+
+
+                    <!-- CONFIRM -->
+
+                    <button
+                        id="confirmBtn"
+                        class="confirm-btn"
+                        onclick="updateReservationStatus('CONFIRMED')">
+
+                        Confirm Reservation
+
+                    </button>
+
+
+
+                    <!-- CANCEL -->
+
+                    <button
+                        id="cancelBtn"
+                        class="cancel-btn"
+                        onclick="updateReservationStatus('CANCELLED')">
+
+                        Cancel Reservation
+
+                    </button>
+
+
+
+                    <!-- CLOSE -->
+
+                    <button
+                        class="modal-close-btn"
+                        onclick="closeReservationModal()">
+
+                        Close
+
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
+    <script src="admin.js"></script>
+
+
+</body>
+
+</html>
+```

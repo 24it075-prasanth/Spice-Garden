@@ -3,6 +3,7 @@ package com.spicegarden.controller;
 import com.spicegarden.entity.Reservation;
 import com.spicegarden.repository.ReservationRepository;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +21,24 @@ public class ReservationController {
         this.reservationRepository = reservationRepository;
     }
 
-    // GET all reservations
+    // GET ALL RESERVATIONS
     @GetMapping
     public List<Reservation> getAllReservations() {
 
         return reservationRepository.findAll();
     }
 
-    // POST new reservation
+    // GET ONE RESERVATION
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> getReservationById(
+            @PathVariable Long id) {
+
+        return reservationRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // CREATE RESERVATION
     @PostMapping
     public Reservation createReservation(
             @RequestBody Reservation reservation) {
@@ -36,4 +47,23 @@ public class ReservationController {
 
         return reservationRepository.save(reservation);
     }
+
+    @PutMapping("/{id}/status")
+public ResponseEntity<Reservation> updateStatus(
+        @PathVariable Long id,
+        @RequestParam String status) {
+
+    return reservationRepository.findById(id)
+            .map(reservation -> {
+
+                reservation.setStatus(status);
+
+                Reservation updated =
+                        reservationRepository.save(reservation);
+
+                return ResponseEntity.ok(updated);
+
+            })
+            .orElse(ResponseEntity.notFound().build());
+}
 }
